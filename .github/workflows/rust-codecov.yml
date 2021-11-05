@@ -6,7 +6,7 @@ on:
         required: false
         type: string
       timeout-minutes:
-        description: Minimum supported Rust version
+        description: The maximum number of minutes to let the job run
         default: 20
         required: false
         type: number
@@ -18,7 +18,7 @@ on:
 jobs:
   analyze:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
       - uses: actions/checkout@v2
         with:
