@@ -35,7 +35,7 @@ jobs:
         uses: actions-rs/tarpaulin@v0.1.3
         with:
           version: '0.18.3'
-          args: '-p isahc --run-types Tests,Doctests --features "${{ inputs.features }}"'
+          args: '-p isahc --run-types Tests,Doctests --features=${{ inputs.features }}'
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2

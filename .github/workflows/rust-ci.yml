@@ -41,7 +41,7 @@ jobs:
           default: true
 
       - name: Run tests
-        run: cargo test --features "${{ inputs.features }}"
+        run: cargo test --features=${{ inputs.features }}
 
   lint:
     name: Run Clippy lints
@@ -58,4 +58,4 @@ jobs:
         uses: actions-rs/clippy-check@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          args: --features "${{ inputs.features }}"
+          args: --features=${{ inputs.features }}
