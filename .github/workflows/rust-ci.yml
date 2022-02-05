@@ -17,10 +17,14 @@ on:
         type: number
 
 jobs:
+  # Run all tests on minimum supported Rust version and on nightly.
   test:
     name: Run tests
     strategy:
       matrix:
+        toolchain:
+          - ${{ inputs.msrv }}
+          - nightly
         os:
           - ubuntu-latest
           - macos-latest
@@ -37,13 +41,31 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
-          toolchain: ${{ inputs.msrv }}
+          toolchain: ${{ matrix.toolchain }}
           default: true
+
+      # Generate lock file if one is not committed to the repo.
+      - name: Update Cargo.lock
+        run: cargo update
+        if: hashFiles('Cargo.lock') != ''
+
+      - name: Cache Cargo dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: cargo-${{ runner.os }}-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            cargo-${{ runner.os }}-
 
       - name: Run tests
         run: cargo test --features=${{ inputs.features }}
 
-  lint:
+  clippy:
     name: Run Clippy lints
     runs-on: ubuntu-latest
     steps:
