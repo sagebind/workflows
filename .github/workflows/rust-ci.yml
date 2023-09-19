@@ -27,7 +27,8 @@ jobs:
           - nightly
         os:
           - ubuntu-latest
-          - macos-latest
+          # https://github.com/rust-lang/rust/issues/103044
+          - ${{ inputs.msrv < 1.54 && 'macos-11' || 'macos-latest' }}
           - windows-latest
     runs-on: ${{ matrix.os }}
     timeout-minutes: ${{ inputs.timeout-minutes }}
