@@ -15,6 +15,11 @@ on:
         default: 20
         required: false
         type: number
+      test-release:
+        description: Also run tests in release mode
+        default: false
+        required: false
+        type: boolean
 
 jobs:
   # Run all tests on minimum supported Rust version and on nightly.
@@ -65,6 +70,10 @@ jobs:
 
       - name: Run tests
         run: cargo test --features=${{ inputs.features }}
+
+      - name: Run tests in release mode
+        run: cargo test --release --features=${{ inputs.features }}
+        if: ${{ inputs.test-release }}
 
   clippy:
     name: Run Clippy lints
